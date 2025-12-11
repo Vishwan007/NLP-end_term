@@ -1,0 +1,62 @@
+# Sentiment Analysis using TF-IDF + SVM
+# -------------------------------------
+
+import pandas as pd
+from sklearn.model_selection import train_test_split
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.svm import LinearSVC
+from sklearn.metrics import accuracy_score, classification_report
+
+# ---------------------------
+# 1. Sample Dataset (Replace with your dataset)
+# ---------------------------
+data = {
+    'text': [
+        "I loved the movie! It was fantastic.",
+        "Worst movie ever. Waste of time.",
+        "The story was great and actors did well.",
+        "I hated the acting. Very bad performance.",
+        "Amazing film, really enjoyed it!",
+        "Terrible plot, boring and predictable."
+    ],
+    'label': ['positive', 'negative', 'positive', 'negative', 'positive', 'negative']
+}
+
+df = pd.DataFrame(data)
+
+# ---------------------------
+# 2. Split Data
+# ---------------------------
+X_train, X_test, y_train, y_test = train_test_split(
+    df['text'], df['label'], test_size=0.2, random_state=42
+)
+
+# ---------------------------
+# 3. TF-IDF Feature Extraction
+# ---------------------------
+tfidf = TfidfVectorizer(stop_words='english')
+X_train_tfidf = tfidf.fit_transform(X_train)
+X_test_tfidf = tfidf.transform(X_test)
+
+# ---------------------------
+# 4. Train SVM Classifier
+# ---------------------------
+model = LinearSVC()
+model.fit(X_train_tfidf, y_train)
+
+# ---------------------------
+# 5. Evaluate Model
+# ---------------------------
+y_pred = model.predict(X_test_tfidf)
+
+print("Accuracy:", accuracy_score(y_test, y_pred))
+print("\nClassification Report:\n", classification_report(y_test, y_pred))
+
+# ---------------------------
+# 6. Predict Sentiment of New Text
+# ---------------------------
+new_text = ["The movie was not good, very disappointing"]
+new_text_tfidf = tfidf.transform(new_text)
+prediction = model.predict(new_text_tfidf)
+
+print("\nPrediction:", prediction[0])
