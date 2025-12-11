@@ -1,0 +1,36 @@
+import nltk
+from nltk.corpus import stopwords
+from nltk.stem import WordNetLemmatizer
+from nltk.tokenize import word_tokenize
+nltk.download('punkt')
+nltk.download('wordnet')
+nltk.download('stopwords')
+def lema(text):
+text = text.lower()
+stopword = set(stopwords.words('english'))
+lemmatizer = WordNetLemmatizer()
+words = word_tokenize(text)
+filtered_words = [word for word in words if word.isalnum() and word not in stopword]
+lemmatized_words = [lemmatizer.lemmatize(word, pos='v') for word in filtered_words]
+return lemmatized_words
+defsenti(text):
+lemmatized_list = lema(text)
+print(lemmatized_list)
+pos_list = ['like', 'good', 'awesome', 'impress', 'interesting', 'love', 'excellent']
+neg_list = ['hate', 'bad', 'poor', 'horrible', 'irritating', 'boring', 'terrible']
+pos_w = 0
+neg_w = 0
+neutral_w = 0
+for word in lemmatized_list:
+if word in pos_list:
+pos_w += 1
+elif word in neg_list:
+neg_w += 1
+else:
+neutral_w += 1
+print(pos_w)
+print(neg_w)
+print(neutral_w)
+print('totalsentiment words', pos_w + neg_w)
+return pos_w, neg_w, neutral_w
+senti("I love this movie. It was awesome but a bit boring at times.")
