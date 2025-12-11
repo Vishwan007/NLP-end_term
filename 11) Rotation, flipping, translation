@@ -1,0 +1,42 @@
+import cv2
+import numpy as np
+
+# -------------------------------------------------------
+# Load Image
+# -------------------------------------------------------
+img = cv2.imread("image.jpg")   # Replace with your image name
+
+if img is None:
+    print("Error: Image not found!")
+    exit()
+
+cv2.imshow("Original Image", img)
+cv2.waitKey(0)
+
+tx, ty = 50, 100   # shift x by 50 px, y by 100 px
+translation_matrix = np.float32([[1, 0, tx], [0, 1, ty]])
+translated_img = cv2.warpAffine(img, translation_matrix, (img.shape[1], img.shape[0]))
+
+cv2.imshow("Translated Image", translated_img)
+cv2.waitKey(0)
+
+rotated_90 = cv2.rotate(img, cv2.ROTATE_90_CLOCKWISE)
+
+cv2.imshow("Rotated 90 Degrees", rotated_90)
+cv2.waitKey(0)
+
+scaled_up = cv2.resize(img, None, fx=1.5, fy=1.5, interpolation=cv2.INTER_LINEAR)
+scaled_down = cv2.resize(img, None, fx=0.5, fy=0.5, interpolation=cv2.INTER_AREA)
+
+cv2.imshow("Scaled Up Image", scaled_up)
+cv2.imshow("Scaled Down Image", scaled_down)
+cv2.waitKey(0)
+
+flip_horizontal = cv2.flip(img, 1)   # horizontal flip
+flip_vertical   = cv2.flip(img, 0)   # vertical flip
+flip_both       = cv2.flip(img, -1)  # flip both
+
+cv2.imshow("Flip Horizontal", flip_horizontal)
+cv2.imshow("Flip Vertical", flip_vertical)
+cv2.imshow("Flip Both", flip_both)
+cv2.waitKey(0)
