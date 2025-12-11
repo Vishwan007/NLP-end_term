@@ -1,0 +1,31 @@
+!pip install gensim
+import gensim
+import gensim.downloader as api
+import numpy as np
+import matplotlib.pyplot as plt
+w2v_model=api.load("word2vec-google-news-300")
+glove_model=api.load("glove-wiki-gigaword-100")
+words=["King","Queen","Man","Woman","Car","Bus"]
+def sim_mat(model,words):
+  n=len(words)
+  matrix=np.zeros((n,n))
+  for i in range(n):
+    for j in range(n):
+      try:
+        matrix[i][j]=model.similarity(words[i],words[j])
+      except:
+        matrix[i][j]=0
+  return matrix
+sim_w2v=sim_mat(w2v_model,words)
+sim_glove=sim_mat(glove_model,words)
+def show_heatmap(matrix,title):
+  plt.figure(figsize=(8,6))
+  plt.imshow(matrix,cmap="viridis",interpolation="nearest")
+  plt.colorbar()
+  plt.xticks(range(len(words)),words)
+  plt.yticks(range(len(words)),words)
+  plt.title(title)
+  plt.tight_layout()
+  plt.show()
+show_heatmap(sim_w2v,"Word2Vec Similarity")
+show_heatmap(sim_glove,"GloVe Similarity")
