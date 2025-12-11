@@ -1,0 +1,38 @@
+import cv2
+import matplotlib.pyplot as plt
+import numpy as np
+img = cv2.imread('/content/pexels-solyartphotos-18354977.jpg')
+n_img = img.copy()
+noisy_prob = 0.25
+noise = np.random.rand(n_img.shape[0], n_img.shape[1])
+n_img[noise < noisy_prob / 2] = 0
+n_img[noise > 1 - noisy_prob / 2] = 255
+med_filter = cv2.medianBlur(n_img, 5)
+gaussian_filter = cv2.GaussianBlur(n_img, (9, 9), 3)
+sharp_kernel = np.array([[0, -1, 0],
+[-1, 5, -1],
+[0, -1, 0]])
+sharpened = cv2.filter2D(img, -1, sharp_kernel)
+plt.figure(figsize=(12, 6))
+plt.subplot(2, 3, 1)
+plt.title("Original Image")
+plt.axis('off')
+plt.imshow(cv2.cvtColor(img, cv2.COLOR_BGR2RGB))
+plt.subplot(2, 3, 2)
+plt.title("Salt & Pepper Noise")
+plt.axis('off')
+plt.imshow(cv2.cvtColor(n_img, cv2.COLOR_BGR2RGB))
+plt.subplot(2, 3, 3)
+plt.title("Median Filtered")
+plt.axis('off')
+plt.imshow(cv2.cvtColor(med_filter, cv2.COLOR_BGR2RGB))
+plt.subplot(2, 3, 4)
+plt.title("Gaussian Blur")
+plt.axis('off')
+plt.imshow(cv2.cvtColor(gaussian_filter, cv2.COLOR_BGR2RGB))
+plt.subplot(2, 3, 5)
+plt.title("Sharpened Image")
+plt.axis('off')
+plt.imshow(cv2.cvtColor(sharpened, cv2.COLOR_BGR2RGB))
+plt.tight_layout()
+plt.show()
